@@ -27,7 +27,7 @@ network  --bootproto=dhcp --device=enp4s0 --ipv6=auto --activate
 network  --hostname=jwmurray-laptop
 
 # Run the Setup Agent on first boot
-#firsboot --enable
+firstboot --enable
 
 # Generated using Blivet version 3.3.0
 ignoredisk --only-use=nvme0n1
