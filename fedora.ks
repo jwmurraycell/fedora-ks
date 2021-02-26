@@ -16,6 +16,7 @@ repo --name=negativo17 --baseurl="https://negativo17.org/repos/nvidia/fedora-33/
 
 # Use graphical install
 graphical
+
 # Keyboard layouts
 keyboard --xlayouts='us'
 # System language
@@ -24,6 +25,16 @@ lang en_US.UTF-8
 # Network information
 network  --bootproto=dhcp --device=enp4s0 --ipv6=auto --activate
 network  --hostname=jwmurray-laptop
+
+# Run the Setup Agent on first boot
+firsboot --enable
+
+# Generated using Blivet version 3.3.0
+ignoredisk --only-use=nvme0n1
+autopart --encrypted
+# Partition clearing information
+clearpart --none --initlabel
+
 # X Window System configuration information
 # xconfig --defaultdesktop GNOME --startxonboot
 # System services
@@ -131,17 +142,17 @@ chromaprint-tools        # Chromaprint audio fingerprinting tools
 clementine               # A music player and library organizer
 digikam                  # A digital camera accessing & photo management application
 kdenlive                 # Non-linear video editor
-ffmpeg                   # Digital VCR and streaming server
+# ffmpeg                   # Digital VCR and streaming server
 gimp                     # GNU Image Manipulation Program
 gthumb                   # Image viewer, editor, organizer
-HandBrake                # An open-source multiplatform video transcoder
-HandBrake-gui            # HandBrake GUI
+# HandBrake                # An open-source multiplatform video transcoder
+# HandBrake-gui            # HandBrake GUI
 inkscape                 # Vector-based drawing program using SVG
 kid3                     # Efficient KDE ID3 tag editor
 moc                      # music on console (needs a config-file, so run the following command) # echo "TiMidity_Config = /etc/timidity.cfg" >> .moc/config
 picard                   # MusicBrainz-based audio tagger
 simplescreenrecorder     # Simple Screen Recorder is a screen recorder for Linux
-vlc                      # The cross-platform open-source multimedia framework, player and server
+# vlc                      # The cross-platform open-source multimedia framework, player and server
 youtube-dl               # A small command-line program to download online videos
 # gydl                   # GUI wrapper around youtube-dl program
 # darktable              # Utility to organize and develop raw images
@@ -251,17 +262,17 @@ pwpolicy luks --minlen=6 --minquality=1 --notstrict --nochanges --notempty
 
 %post
 # Repositories
-dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm https://prerelease.keybase.io/keybase_amd64.rpm
+dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 # Element
-#dnf -y copr enable taw/element
+# dnf -y copr enable taw/element
 # negativo17 nvidia repository
 dnf config-manager --add-repo=https://negativo17.org/repos/fedora-nvidia.repo
 # Packages
 dnf -y install rpmfusion-free-release-tainted rpmfusion-nonfree-release-tainted --refresh
 # NVIDIA
-# dnf -y install nvidia-driver nvidia-settings
+dnf -y install nvidia-driver nvidia-settings
 # Signal Desktop as Flatpak
-#flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install -y flathub org.signal.Signal
+# flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo && flatpak install -y flathub org.signal.Signal
 
 # dnf-automatic security upgrades
 # timer configuration: /etc/systemd/system/multi-user.target.wants/dnf-automatic.timer
@@ -292,6 +303,3 @@ systemctl enable --now dnf-automatic.timer
 # For every user who wants to use Syncthing.
 # systemctl enable --now syncthing@USER.service
 %end
-
-# Reboot After Installation
-reboot --eject
